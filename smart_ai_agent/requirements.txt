@@ -1,0 +1,15 @@
+langchain==0.3.27
+langchain-text-splitters==0.3.9
+langchain-google-genai==2.1.8
+langchain_community==0.3.26
+python-dotenv==1.1.1
+unstructured==0.18.11
+onnxruntime==1.22.1
+unstructured[all-docs]
+python-magic-bin==0.4.14 
+pydantic==2.11.7
+djangorestframework==3.16.0
+daphne==4.2.1
+adrf==0.1.9
+langchain_postgres==0.0.15
+psycopg==3.2.9
