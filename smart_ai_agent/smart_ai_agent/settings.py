@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
+    'rest_framework.authtoken',
     'adrf',
     "api"
 ]
@@ -69,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'smart_ai_agent.wsgi.application'
+WSGI_APPLICATION = 'smart_ai_agent.wsgi.application'
 ASGI_APPLICATION = 'smart_ai_agent.asgi.application'
 
 
@@ -78,14 +80,14 @@ ASGI_APPLICATION = 'smart_ai_agent.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': "db.sqlite3",
-        #  'ENGINE': 'django.db.backends.postgresql',
-        #  'NAME': 'smart_ai_agent',
-        #  'USER': 'postgres',
-        #  'PASSWORD': 'admin',
-        #  'HOST': 'localhost', 
-        #  'PORT': '5432',  
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': "db.sqlite3",
+         'ENGINE': 'django.db.backends.postgresql',
+         'NAME': "smart_ai",
+         'USER': 'postgres',
+         'PASSWORD': 'admin',
+         'HOST': 'localhost', 
+         'PORT': '5432',  
     }
 }
 
@@ -130,5 +132,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework.authentication.TokenAuthentication',
+        ],
+        # 'DEFAULT_PERMISSION_CLASSES': [
+        #     'rest_framework.permissions.IsAuthenticated',
+        # ],
+}
 
 
