@@ -26,12 +26,13 @@ def document_list(request):
 
     elif request.method == 'POST':
         urls = request.data.get('urls', '')
-        if("," in urls):
+        if ("," in urls):
             urls = urls.split(",")
             add_documents(urls)
         else:
             add_document(urls)
         return Response({"message": "Documents added successfully"}, status=status.HTTP_201_CREATED)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def document_detail(request, pk):
@@ -58,42 +59,46 @@ def document_detail(request, pk):
         delete_document(document)
         return Response({"message": "Document deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
-@api_view([ 'PUT'])
+
+@api_view(['PUT'])
 def re_index_document_to_vector_db(request, pk):
     try:
         document = Document.objects.get(pk=pk)
     except Document.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
+
     re_index_document(document)
     serializer = DocumentSerializer(document)
     return Response({"message": "Document updated successfully", "data": serializer.data}, status=status.HTTP_200_OK)
 
-@api_view([ 'POST'])
+
+@api_view(['POST'])
 def load_document_from_dir(request):
     load_documents()
     return Response({"message": "Document loaded successfully"}, status=status.HTTP_200_OK)
 
+
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view([ 'GET'])
+@api_view(['GET'])
 def get_document_in_vector_db(request, pk):
     print(request.user)
     try:
         document = Document.objects.get(pk=pk)
     except Document.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-  
+
     vector_doc = get_document_from_vector_db(str(document.id))
     if not vector_doc:
         return Response({"message": "Document not found in vector database"}, status=status.HTTP_404_NOT_FOUND)
-    
+
     print(vector_doc)
     data = {
         "title": vector_doc.metadata.get('title', 'Untitled'),
         "content": vector_doc.page_content
     }
     return Response({"message": "Document found in vector database", "data": data}, status=status.HTTP_200_OK)
+
 
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -115,9 +120,8 @@ def login_to_chat(request):
         return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
     user = User.objects.filter(email=email).first()
     if user:
-         token = Token.objects.create(user=user)
-         return Response({"message": "Welcome back", "user_id": user.id, "token": token.key}, status=status.HTTP_200_OK)
-
+        token = Token.objects.create(user=user)
+        return Response({"message": "Welcome back", "user_id": user.id, "token": token.key}, status=status.HTTP_200_OK)
 
     full_name = request.data.get('full_name')
     full_name_parts = full_name.split(" ")
@@ -126,10 +130,11 @@ def login_to_chat(request):
     first_name = full_name_parts[0]
     last_name = full_name_parts[-1]
 
-    if not email :
+    if not email:
         return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-    user = User.objects.create_user(username=email, email=email, first_name=first_name, last_name=last_name)
+    user = User.objects.create_user(
+        username=email, email=email, first_name=first_name, last_name=last_name)
     token = Token.objects.create(user=user)
     UserData.objects.create(
         user=user,

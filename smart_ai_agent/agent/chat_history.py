@@ -5,20 +5,23 @@ import os
 import psycopg
 
 load_dotenv()
-db_name =  os.getenv("DB_NAME")
+db_name = os.getenv("DB_NAME")
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
 db_host = os.getenv("DB_HOST")
 if not db_name or not db_user or not db_password or not db_host:
-    raise ValueError("Database connection details are not set in the environment variables.")
+    raise ValueError(
+        "Database connection details are not set in the environment variables.")
 
-CONNECTION= f"dbname={db_name} user={db_user} password={db_password} host={db_host}"
+CONNECTION = f"dbname={db_name} user={db_user} password={db_password} host={db_host}"
 sync_connection = psycopg.connect(CONNECTION)
 table_name = "chat_history"
 PostgresChatMessageHistory.create_tables(sync_connection, table_name)
 
+
 class ChatHistory:
-    session_id = str("7cddff78-60a6-4b72-8fde-9a1d3c2a2e52")  # Unique identifier for the chat session
+    # Unique identifier for the chat session
+    session_id = str("7cddff78-60a6-4b72-8fde-9a1d3c2a2e52")
 
     def __init__(self, session_id: str):
         self.session_id = session_id
@@ -40,7 +43,7 @@ class ChatHistory:
             message = AIMessage(content=content)
         else:
             message = None
-            
+
         if message:
             self.chat_history.add_message(message)
 

@@ -18,11 +18,12 @@ def get_agent_context(query_text: str):
 
     return "\n\n---\n\n".join([doc.page_content for doc in results])
 
+
 def invoke_agent(query_text: str, user: User, external_user_id: str) -> dict:
     llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
     chat_history = ChatHistory(session_id=external_user_id)
     messages = chat_history.get_messages()
-    tools  = generate_flight_tools(user)
+    tools = generate_flight_tools(user)
 
     context_text = get_agent_context(query_text)
     prompt_template = ChatPromptTemplate.from_template(FLIGHT_AGENT_TEMPLATE)
@@ -35,7 +36,7 @@ def invoke_agent(query_text: str, user: User, external_user_id: str) -> dict:
         ("placeholder", "{agent_scratchpad}")
     ])
     agent = create_tool_calling_agent(llm, tools, prompt)
-   
+
     executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
     print(executor)

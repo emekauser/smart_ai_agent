@@ -21,7 +21,7 @@ Avoid  using the the sentence "Base on the context or document" in your response
 {question}
 """
 
-FLIGHT_AGENT_TEMPLATE= """
+FLIGHT_AGENT_TEMPLATE = """
 As a airline agent,your job is to book flight , resolve flight issue with customer and provide information about the 
 flight base on the context provided
 You should follow the instructions outline in the context 

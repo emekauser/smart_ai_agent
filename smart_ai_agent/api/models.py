@@ -1,17 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Document(models.Model):
-    title= models.CharField()
+    title = models.CharField()
     file_type = models.CharField(max_length=10)
     content = models.TextField()
     url = models.URLField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
 
     def __str__(self):
         return self.title
+
 
 class FlightTicket(models.Model):
     departure = models.CharField(max_length=30)
@@ -21,14 +22,15 @@ class FlightTicket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_used = models.BooleanField()
     is_cancelled = models.BooleanField()
-    ticket_number= models.IntegerField()
-    seat_number= models.IntegerField()
-    pnr=models.CharField(max_length=6)
+    ticket_number = models.IntegerField()
+    seat_number = models.IntegerField()
+    pnr = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Flight Ticket {self.pnr} for {self.user.username} from {self.departure} to {self.arrival}"
+
 
 class UserData(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
