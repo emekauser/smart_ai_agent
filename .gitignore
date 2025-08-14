@@ -2,3 +2,4 @@
 chroma/
 env/
 data/
+**/__pycache__/
