@@ -13,3 +13,4 @@ daphne==4.2.1
 adrf==0.1.9
 langchain_postgres==0.0.15
 psycopg==3.2.9
+django-cors-headers==4.7.0

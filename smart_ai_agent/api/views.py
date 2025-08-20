@@ -110,7 +110,7 @@ def ask_agent(request):
 
     response = invoke_agent(query, request.user, external_user_id)
     print(response)
-    return Response({"response": response}, status=status.HTTP_200_OK)
+    return Response({"reply": response["output"]}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -120,6 +120,8 @@ def login_to_chat(request):
         return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
     user = User.objects.filter(email=email).first()
     if user:
+        token = Token.objects.filter(user_id=user.id).first()
+        token.delete()
         token = Token.objects.create(user=user)
         return Response({"message": "Welcome back", "user_id": user.id, "token": token.key}, status=status.HTTP_200_OK)
 

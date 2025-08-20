@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     'rest_framework.authtoken',
+    "corsheaders",
     'adrf',
     "api"
 ]
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'smart_ai_agent.urls'
@@ -82,12 +84,12 @@ DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': "db.sqlite3",
-         'ENGINE': 'django.db.backends.postgresql',
-         'NAME': "smart_ai",
-         'USER': 'postgres',
-         'PASSWORD': 'admin',
-         'HOST': 'localhost', 
-         'PORT': '5432',  
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "smart_ai",
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -134,12 +136,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-        'DEFAULT_AUTHENTICATION_CLASSES': [
-            'rest_framework.authentication.TokenAuthentication',
-        ],
-        # 'DEFAULT_PERMISSION_CLASSES': [
-        #     'rest_framework.permissions.IsAuthenticated',
-        # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
 }
 
-
+CORS_ORIGIN_ALLOW_ALL = True
