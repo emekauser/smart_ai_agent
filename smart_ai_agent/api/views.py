@@ -1,15 +1,18 @@
 
+import asyncio
 from rest_framework.response import Response
 # from rest_framework.decorators import api_view
 from rest_framework import status
-# from adrf.decorators import api_view, authentication_classes, permission_classes
+from adrf.decorators import api_view
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import authentication_classes, permission_classes
 import uuid
+from asgiref.sync import sync_to_async
+# from asgiref.sync import sync_to_async
 
 from .models import Document, UserData
 from .serializer import DocumentSerializer
@@ -73,8 +76,9 @@ def re_index_document_to_vector_db(request, pk):
 
 
 @api_view(['POST'])
-def load_document_from_dir(request):
-    load_documents()
+async def load_document_from_dir(request):
+    print(asyncio.get_event_loop())
+    await load_documents()
     return Response({"message": "Document loaded successfully"}, status=status.HTTP_200_OK)
 
 
