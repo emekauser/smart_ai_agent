@@ -1,3 +1,4 @@
+import asyncio
 from langchain_chroma import Chroma
 from langchain.schema import Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -9,16 +10,13 @@ import os
 # Load environment variables. Assumes that project contains .env file with API keys
 load_dotenv()
 
-
-if not os.getenv("GOOGLE_API_KEY"):
-    os.environ["GOOGLE_API_KEY"] = "AIzaSyD__T_u-FpDiDiTjJ7SaMy_0kbZpJ99zwg"
-
 CHROMA_PATH = "chroma"
 DB_NAME = "smart_ai_documents"
 MODEL_NAME = "models/gemini-embedding-exp-03-07"
 
 vector_store = Chroma(
-    # collection_name=DB_NAME,
+    collection_name=DB_NAME,
+    persist_directory=CHROMA_PATH,
     embedding_function=GoogleGenerativeAIEmbeddings(model=MODEL_NAME))
 
 
@@ -48,14 +46,23 @@ def get_document_from_chroma(id: str) -> Document | None:
     return results[0] if results else None
 
 
-def search_documents_in_chroma(query: str, k: int = 5) -> list[Document]:
+async def search_documents_in_chroma(query: str, k: int = 5) -> list[Document]:
     """
     Search for documents in the vector store based on a query.
     Returns a list of Document objects.
     """
-    results = vector_store.similarity_search(query=query)
+    results = await vector_store.asimilarity_search(query=query)
+    print(results)
     return results if results else []
 
+# add_documents_to_chroma(
+#     [
+#         Document(page_content="The weather is sunny and warm."),
+#         Document(page_content="I want to book a flight to New York."),
+#     ],
+#     ["doc3", "doc4"]
+# )
+asyncio.run(search_documents_in_chroma("weather"))
 
-docs = search_documents_in_chroma("accord")
-print(f"Search results: {[doc.page_content for doc in docs]}")
+# docs = search_documents_in_chroma("accord")
+# print(f"Search results: {[doc.page_content for doc in docs]}")
