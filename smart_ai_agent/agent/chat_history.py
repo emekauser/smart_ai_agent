@@ -19,7 +19,7 @@ table_name = "chat_history"
 PostgresChatMessageHistory.create_tables(sync_connection, table_name)
 
 
-class ChatHistory:
+class ChatHistoryV1:
     # Unique identifier for the chat session
     session_id = str("7cddff78-60a6-4b72-8fde-9a1d3c2a2e52")
 
@@ -53,3 +53,47 @@ class ChatHistory:
         Returns a list of messages.
         """
         return self.chat_history.messages[:10]  # Limit to the last 10 messages
+
+
+class ChatHistory:
+    # Unique identifier for the chat session
+    session_id = str("7cddff78-60a6-4b72-8fde-9a1d3c2a2e52")
+
+    def __init__(self, session_id: str):
+        self.session_id = session_id
+
+        # Initialize the chat history manager
+
+    async def make_connection(self):
+        async_connection = await psycopg.AsyncConnection.connect(CONNECTION)
+        self.chat_history = PostgresChatMessageHistory(
+            table_name,
+            self.session_id,
+            async_connection=async_connection
+        )
+
+    @classmethod
+    async def connect(cls, session_id: str):
+        instance = cls(session_id=session_id)
+        await instance.make_connection()
+        return instance
+
+    def human_message(self, content: str):
+        return HumanMessage(content=content)
+
+    def ai_message(self, content: str):
+        return AIMessage(content=content)
+
+    async def add_messages(self, messages: list[HumanMessage | AIMessage]):
+        """
+        Add messages to the chat history.
+        """
+        await self.chat_history.aadd_messages(messages)
+
+    async def get_messages(self) -> list[AIMessage | HumanMessage]:
+        """
+        Retrieve all messages from the chat history.
+        Returns a list of messages.
+        """
+        messages = await self.chat_history.aget_messages()
+        return messages[:10]  # Limit to the last 10 messages

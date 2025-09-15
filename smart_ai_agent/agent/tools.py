@@ -1,3 +1,5 @@
+
+from langchain_core.tools import tool
 from langchain_core.tools import tool, BaseTool
 from typing import Optional, List
 
@@ -62,3 +64,12 @@ def generate_flight_tools(user) -> List[BaseTool]:
         return "Please provide all required information: email, pnk, and surname to request a refund."
 
     return [reschedule_flight, book_flight, cancel_flight, ask_for_refund]
+
+
+# @tool
+# def calculator(a: int, b: int) -> int:
+#     """Add two numbers."""
+#     return a + b
+
+
+# tool_node = ToolNode([calculator])

@@ -1,5 +1,6 @@
 
-import asyncio
+import uuid
+
 from rest_framework.response import Response
 # from rest_framework.decorators import api_view
 from rest_framework import status
@@ -10,14 +11,13 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import authentication_classes, permission_classes
-import uuid
-from asgiref.sync import sync_to_async
-# from asgiref.sync import sync_to_async
+
 
 from .models import Document, UserData
 from .serializer import DocumentSerializer
-from agent.agent_interface import add_document, add_documents, update_document, delete_document, re_index_document, get_document_from_vector_db, load_documents
+from agent.agent_interface import add_document, add_documents, update_document, delete_document, re_index_document, get_document_from_vector_db
 from agent.agent import invoke_agent
+from agent.agents.flight_manager_agent import ask_for_help
 
 
 @api_view(['GET', 'POST'])
@@ -75,13 +75,6 @@ def re_index_document_to_vector_db(request, pk):
     return Response({"message": "Document updated successfully", "data": serializer.data}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
-async def load_document_from_dir(request):
-    print(asyncio.get_event_loop())
-    await load_documents()
-    return Response({"message": "Document loaded successfully"}, status=status.HTTP_200_OK)
-
-
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
@@ -110,9 +103,7 @@ def get_document_in_vector_db(request, pk):
 def ask_agent(request):
     query = request.data.get('query', '')
     user = request.user
-    external_user_id = user.userdata.external_id
-
-    response = invoke_agent(query, request.user, external_user_id)
+    response = ask_for_help(user, query)
     print(response)
     return Response({"reply": response["output"]}, status=status.HTTP_200_OK)
 

@@ -2,7 +2,6 @@ from .pg_vector_interface import add_document_to_vector_store, add_documents_to_
 from .pg_vector_interface_async import VectorStoreInterface
 from .webcrawler import load_document, load_documents
 from api.models import Document
-from .document_ingester import load_documents_from_directory
 
 
 def add_document(url: str):
@@ -37,12 +36,11 @@ def add_documents(urls: list[str]):
     add_documents_to_vector_store(docs, ids)
 
 
-async def load_documents() -> list[Document]:
+async def load_documents(docs) -> list[Document]:
     """
     Load all documents from a specified directory and add them to the vector store.
     """
     vector_store_interface = await VectorStoreInterface.connect()
-    docs = await load_documents_from_directory("data")
 
     documents = [Document(
         title=doc.metadata.get('title', 'Untitled'),

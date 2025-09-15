@@ -16,3 +16,7 @@ psycopg==3.2.9
 django-cors-headers==4.7.0
 asyncpg==0.30.0
 asgiref==3.9.1
+django-extensions==4.1
+python-decouple==3.8
+SpeechRecognition==3.14.3
+pydub==0.25.1

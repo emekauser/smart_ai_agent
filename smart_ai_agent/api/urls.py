@@ -7,6 +7,5 @@ urlpatterns = [
     path('documents/reindex/<int:pk>/', views.re_index_document_to_vector_db),
     path('ask/', views.ask_agent),
     path('documents/vector/<int:pk>/', views.get_document_in_vector_db),
-    path('documents/load/', views.load_document_from_dir),
     path('user/access/', views.login_to_chat),
 ]
