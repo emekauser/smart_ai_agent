@@ -84,4 +84,7 @@ The application provides two main API endpoints for user interaction:
 
   **Note:** Replace `<your_token>` with the actual token you received.
 
+Link to the UI
+https://github.com/emekauser/smart_ai_frontend/
+
 Install fmpeg before using voice command
