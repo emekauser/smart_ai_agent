@@ -54,15 +54,3 @@ async def search_documents_in_chroma(query: str, k: int = 5) -> list[Document]:
     results = await vector_store.asimilarity_search(query=query)
     print(results)
     return results if results else []
-
-# add_documents_to_chroma(
-#     [
-#         Document(page_content="The weather is sunny and warm."),
-#         Document(page_content="I want to book a flight to New York."),
-#     ],
-#     ["doc3", "doc4"]
-# )
-asyncio.run(search_documents_in_chroma("weather"))
-
-# docs = search_documents_in_chroma("accord")
-# print(f"Search results: {[doc.page_content for doc in docs]}")
