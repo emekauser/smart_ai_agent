@@ -12,10 +12,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import authentication_classes, permission_classes
 
 
-from .models import Document, UserData
+from .models import Document, UserSession
 from .serializer import DocumentSerializer
 from agent.agent_interface import add_document, add_documents, update_document, delete_document, re_index_document, get_document_from_vector_db
 from agent.agents.flight_manager_agent import ask_for_help
+from .chat_session import ChatSession
 
 
 @api_view(['GET', 'POST'])
@@ -101,8 +102,14 @@ def get_document_in_vector_db(request, pk):
 def ask_agent(request):
     query = request.data.get('query', '')
     user = request.user
-    response = ask_for_help(user, query)
-    print(response)
+
+    chat_session = ChatSession(user)
+    user_session = chat_session.get_current_session()
+    if user_session == None:
+        user_session = chat_session.create()
+
+    # response = ask_for_help(user, chat_session, query)
+    response = {"output": "Welcome Emeka"}
     return Response({"reply": response["output"]}, status=status.HTTP_200_OK)
 
 
@@ -116,6 +123,8 @@ def login_to_chat(request):
         token = Token.objects.filter(user_id=user.id).first()
         token.delete()
         token = Token.objects.create(user=user)
+        chat_session = ChatSession(user)
+        chat_session.create()
         return Response({"message": "Welcome back", "user_id": user.id, "token": token.key}, status=status.HTTP_200_OK)
 
     full_name = request.data.get('full_name')
@@ -131,9 +140,7 @@ def login_to_chat(request):
     user = User.objects.create_user(
         username=email, email=email, first_name=first_name, last_name=last_name)
     token = Token.objects.create(user=user)
-    UserData.objects.create(
-        user=user,
-        external_id=str(uuid.uuid4())
-    )
+    chat_session = ChatSession(user)
+    chat_session.create()
 
     return Response({"message": "User created successfully", "user_id": user.id, "token": token.key}, status=status.HTTP_201_CREATED)

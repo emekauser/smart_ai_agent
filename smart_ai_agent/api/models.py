@@ -32,9 +32,12 @@ class FlightTicket(models.Model):
         return f"Flight Ticket {self.pnr} for {self.user.username} from {self.departure} to {self.arrival}"
 
 
-class UserData(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    external_id = models.CharField(max_length=40)
+class UserSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    session_id = models.CharField(max_length=40)
+    expire_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.external_id} ({self.user.username})"
+        return f"{self.session_id} ({self.user.username})"
