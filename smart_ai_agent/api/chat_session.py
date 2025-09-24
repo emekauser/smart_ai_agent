@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
 
-from .models import UserSession, User
+from .models import UserChatSession, User
 
 
 class ChatSession:
@@ -9,20 +9,21 @@ class ChatSession:
         self.user = user
         self.session_time_out = 4
 
-    def create(self) -> UserSession:
+    def create(self) -> UserChatSession:
         expiry_time = datetime.now() + \
             timedelta(minutes=60 * self.session_time_out)
-        session = UserSession.objects.create(
+        session = UserChatSession.objects.create(
             user=self.user,
             session_id=str(uuid.uuid4()),
             expire_at=expiry_time
         )
         return session
 
-    def get_current_session(self) -> UserSession | None:
+    def get_current_session(self) -> UserChatSession | None:
         current_time = datetime.now()
-        sessions = UserSession.objects.filter(
-            user_id=self.user.id, expire_at__lte=current_time)
+        sessions = UserChatSession.objects.filter(
+            user_id=self.user.id, expire_at__gte=current_time)
+
         if not sessions:
             return None
         else:

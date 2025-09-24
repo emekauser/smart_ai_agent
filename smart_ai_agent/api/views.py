@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import authentication_classes, permission_classes
 
 
-from .models import Document, UserSession
+from .models import Document, UserChatSession
 from .serializer import DocumentSerializer
 from agent.agent_interface import add_document, add_documents, update_document, delete_document, re_index_document, get_document_from_vector_db
 from agent.agents.flight_manager_agent import ask_for_help
@@ -105,11 +105,12 @@ def ask_agent(request):
 
     chat_session = ChatSession(user)
     user_session = chat_session.get_current_session()
+
     if user_session == None:
         user_session = chat_session.create()
 
-    # response = ask_for_help(user, chat_session, query)
-    response = {"output": "Welcome Emeka"}
+    response = ask_for_help(user, user_session, query)
+    # response = {"output": "Welcome Emeka"}
     return Response({"reply": response["output"]}, status=status.HTTP_200_OK)
 
 

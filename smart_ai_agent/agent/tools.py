@@ -9,6 +9,33 @@ from .flight_interface import book_flight_db, reschedule_flight_db, cancel_fligh
 def generate_flight_tools(user) -> List[BaseTool]:
 
     @tool
+    def set_destination_info(city: str) -> str:
+        """
+        This tool should be called when user provide arrival city as input
+        """
+        print(f"arrival  city is  {city}")
+        # In a real implementation, this might query a database or an API.
+        return f"arrival  city is  {city}"
+
+    @tool
+    def set_departure_info(city: str) -> str:
+        """
+        This tool should be called when user provide departure city as input
+        """
+        print(f"departure city is  {city}")
+        # In a real implementation, this might query a database or an API.
+        return f"departure city is  {city}"
+
+    @tool
+    def set_departure_time_info(time: str) -> str:
+        """
+        This tool should be called when user provide departure time as input
+        """
+        print(f"departure time is  {time}")
+        # In a real implementation, this might query a database or an API.
+        return f"departure time is  {time}"
+
+    @tool
     def reschedule_flight(pnr: Optional[str], departure_city: Optional[str], arrival_city: Optional[str], departure_time: Optional[str]) -> str:
         """
         This tool should get customer pnr from the prompt when submitted by human,
@@ -61,15 +88,6 @@ def generate_flight_tools(user) -> List[BaseTool]:
 
         if pnr:
             return f"Refund requested for PNR {pnr}."
-        return "Please provide all required information: email, pnk, and surname to request a refund."
+        return "Please provide all required information: email, pnr, and surname to request a refund."
 
-    return [reschedule_flight, book_flight, cancel_flight, ask_for_refund]
-
-
-# @tool
-# def calculator(a: int, b: int) -> int:
-#     """Add two numbers."""
-#     return a + b
-
-
-# tool_node = ToolNode([calculator])
+    return [set_departure_info, set_destination_info, set_departure_time_info, reschedule_flight, book_flight, cancel_flight, ask_for_refund]

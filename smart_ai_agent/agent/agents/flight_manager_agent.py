@@ -10,6 +10,7 @@ from ..chat_history import ChatHistoryV1
 from ..agent_advance import AdvanceAgent
 from ..tools import generate_flight_tools
 from ..agent_models import get_model
+from api.models import UserChatSession
 
 
 async def get_agent_context(query_text: str):
@@ -32,9 +33,10 @@ def get_prompt_template(context_text: str, user: User):
     ])
 
 
-def ask_for_help(user: User, user_session, query: str,) -> dict:
+def ask_for_help(user: User, user_chat_session: UserChatSession, query: str,) -> dict:
     context_text = async_to_sync(get_agent_context)(query)
-    chat_history = ChatHistoryV1(session_id=user_session.session_id)
+    print(user_chat_session)
+    chat_history = ChatHistoryV1(session_id=user_chat_session.session_id)
     tools = generate_flight_tools(user)
 
     advance_executor = AdvanceAgent(
