@@ -1,0 +1,5 @@
+env/
+chroma/
+smart_ai_agent/data/
+smart_ai_agent/chroma/
+**/__pycache__/
