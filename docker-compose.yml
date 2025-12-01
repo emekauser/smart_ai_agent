@@ -5,10 +5,6 @@ services:
     image: postgres:17
     env_file:
       - .env
-    # environment:
-    #   POSTGRES_DB: smart_ai_db
-    #   POSTGRES_USER: smart_ai_user
-    #   POSTGRES_PASSWORD: smart_ai_password
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
